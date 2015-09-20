@@ -21,7 +21,9 @@ public class FasterNodeProvisionRunnable implements Runnable {
     }
 
     public void run() {
+        final String oldName = Thread.currentThread().getName();
         try {
+            Thread.currentThread().setName("Faster node provisioning for label " + assignedLabel);
             // because too frequent calls < 100, will be ignored
             Thread.sleep(50);
             final Jenkins instance = Jenkins.getActiveInstance();
@@ -36,6 +38,8 @@ public class FasterNodeProvisionRunnable implements Runnable {
                 assignedLabel.nodeProvisioner.suggestReviewNow();
             }
         } catch (InterruptedException ignored) {
+        } finally {
+            Thread.currentThread().setName(oldName);
         }
     }
 }
